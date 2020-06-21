@@ -21,13 +21,20 @@ namespace Mp3Listaren
             }.ToDictionary(x => x);
         }
          
-        static void Main()
+        static void Main(params string[] args)
         {
             var fileInfos = Directory
                 .GetFiles(Environment.CurrentDirectory, "*", SearchOption.AllDirectories)
                 .Select(x => new FileInfo(x));
 
-            using StreamWriter streamWriter = new StreamWriter("filer.txt");
+            var outputPath = $@"{Directory.GetCurrentDirectory()}\filer.txt";
+
+            if (args.Contains("--debug"))
+            {
+                Console.WriteLine($"Skriver till '{outputPath}'");
+            }
+            
+            using StreamWriter streamWriter = new StreamWriter(outputPath);
             foreach (FileInfo fileInfo in fileInfos)
             {
                 string extension = Path.GetExtension(fileInfo.FullName);
