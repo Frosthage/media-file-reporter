@@ -12,28 +12,25 @@ namespace Mp3Listaren
         static Program()
         {
             SupportedFiles = new[]
-            {
-                // video
-                "mkv", "ogv", "avi", "wmv", "asf", "mp4", "m4p", "m4v", "mpeg", "mpg", "mpe", "mpv", "mpg", "m2v",
-                // audio
-                "aa", "aax", "aac", "aiff", "ape", "dsf", "flac", "m4a", "m4b", "m4p", "mp3", "mpc", "mpp", "ogg",
-                "oga", "wav", "wma", "wv", "webm"
-            }.ToDictionary(x => x);
+                {
+                    // video
+                    "mkv", "ogv", "avi", "wmv", "asf", "m4p", "m4v", "mpeg", "mpe", "mpv", "mpg", "m2v",
+                    // audio
+                    "aa", "aax", "aac", "aiff", "ape", "dsf", "flac", "m4a", "m4b", "m4p", "mp3", "mpc", "mpp", "ogg",
+                    "oga", "wav", "wma", "wv", "webm"
+                }
+                .Distinct()
+                .ToDictionary(x => x);
         }
-         
-        static void Main(params string[] args)
+
+        static void Main()
         {
             var fileInfos = Directory
                 .GetFiles(Environment.CurrentDirectory, "*", SearchOption.AllDirectories)
                 .Select(x => new FileInfo(x));
 
             var outputPath = $@"{Directory.GetCurrentDirectory()}\filer.txt";
-
-            if (args.Contains("--debug"))
-            {
-                Console.WriteLine($"Skriver till '{outputPath}'");
-            }
-            
+          
             using StreamWriter streamWriter = new StreamWriter(outputPath);
             foreach (FileInfo fileInfo in fileInfos)
             {
