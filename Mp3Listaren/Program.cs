@@ -2,18 +2,23 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Serilog;
+using Serilog.Core;
 using File = TagLib.File;
 
 namespace Mp3Listaren
 {
-    class Program
+    static class Program
     {
         private static readonly Dictionary<string, string> SupportedVideo;
 
         private static readonly Dictionary<string, string> SupportedImage;
 
         private static readonly Dictionary<string, string> SupportedAudio;
-        
+        private static readonly Logger Log = new LoggerConfiguration()
+            .WriteTo.File("log.txt")
+            .CreateLogger();
+
         static Program()
         {
             SupportedVideo = new[]
@@ -42,6 +47,8 @@ namespace Mp3Listaren
 
         static void Main()
         {
+            
+            
             var fileInfos = Directory
                 .GetFiles(Environment.CurrentDirectory, "*", SearchOption.AllDirectories)
                 .Select(x => new FileInfo(x));
@@ -76,26 +83,34 @@ namespace Mp3Listaren
             {
                 return ("---", "---", "---", "---", "---");
             }
-            
-            using var file = File.Create(fileInfo.FullName);
 
-            return fileType switch
+            try
             {
-                FileType.Image => (
-                    "---",
-                    file.Properties.PhotoWidth.ToString(),
-                    file.Properties.PhotoHeight.ToString(),
-                    $"{file.Properties.PhotoWidth}x{file.Properties.PhotoHeight}",
-                    "---"),
-                FileType.Audio => (file.Properties.Duration.ToString("hh\\:mm\\:ss"), "---", "---", "---", "---"),
-                FileType.Video => (
-                    file.Properties.Duration.ToString("hh\\:mm\\:ss"),
-                    file.Properties.VideoWidth.ToString(),
-                    file.Properties.PhotoHeight.ToString(),
-                    $"{file.Properties.VideoWidth}x{file.Properties.PhotoHeight}",
-                    "---"),
-                _ => throw new ArgumentOutOfRangeException()
-            };
+                using var file = File.Create(fileInfo.FullName);
+
+                return fileType switch
+                {
+                    FileType.Image => (
+                        "---",
+                        file.Properties.PhotoWidth.ToString(),
+                        file.Properties.PhotoHeight.ToString(),
+                        $"{file.Properties.PhotoWidth}x{file.Properties.PhotoHeight}",
+                        "---"),
+                    FileType.Audio => (file.Properties.Duration.ToString("hh\\:mm\\:ss"), "---", "---", "---", "---"),
+                    FileType.Video => (
+                        file.Properties.Duration.ToString("hh\\:mm\\:ss"),
+                        file.Properties.VideoWidth.ToString(),
+                        file.Properties.PhotoHeight.ToString(),
+                        $"{file.Properties.VideoWidth}x{file.Properties.PhotoHeight}",
+                        "---"),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "File {File} throw exception", fileInfo.FullName);
+                return ("---", "---", "---", "---", "---");
+            }
         }
 
         private static FileType GetFileType(FileInfo fileInfo)
