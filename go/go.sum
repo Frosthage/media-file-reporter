@@ -1,0 +1,6 @@
+github.com/dgrijalva/qtff-go v0.0.0-20140128205242-34d9ed5c5b1c h1:50QksK6Fuu7EY1fslfK2hagDHImMsiKZrVxqKcQH3Yk=
+github.com/dgrijalva/qtff-go v0.0.0-20140128205242-34d9ed5c5b1c/go.mod h1:tEhZGD3/vzziWMLykKPpnsAGOu1uKvNg1ERzeAFKK/s=
+github.com/mdouchement/dng v0.0.0-20170415183926-292bb2b0015a h1:6df3UGAQ08DXqDVgV5YhzP6igJ458b7znM0wfXDW1Fk=
+github.com/mdouchement/dng v0.0.0-20170415183926-292bb2b0015a/go.mod h1:9HzaDtkmVNHVqzkoow9lSuEzhN1OIxzDhJ6hZwmxblo=
+gopkg.in/vansante/go-ffprobe.v2 v2.0.2 h1:DdxSfFnlqeawPIVbIQEI6LR6OQHQNR7tNgWb2mWuC4w=
+gopkg.in/vansante/go-ffprobe.v2 v2.0.2/go.mod h1:qF0AlAjk7Nqzqf3y333Ly+KxN3cKF2JqA3JT5ZheUGE=
