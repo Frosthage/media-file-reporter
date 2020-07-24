@@ -60,11 +60,12 @@ func digester(done <-chan struct{}, paths <-chan string, c chan<- result) {
 	}
 }
 
+var root = "."
 
 func main() {
 
 	done := make(<-chan struct{})
-	paths, _ := walkFiles(done, ".")
+	paths, _ := walkFiles(done, root)
 
 	// Start a fixed number of goroutines to read and digest files.
 	c := make(chan result)
@@ -98,7 +99,7 @@ func main2() {
 
 	var files []formats.Media
 
-	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 
 		if err != nil {
 			fmt.Println(err)
