@@ -12,6 +12,7 @@ import (
 
 type Media interface {
 	GetRecord() (string, error)
+	GetPath() string
 }
 
 func CreateMedia(filePath string, info os.FileInfo) Media {
