@@ -40,6 +40,10 @@ func (media ImageMediaFile) GetRecord() (string, error) {
 	), nil
 }
 
+func (media ImageMediaFile) GetPath() string {
+	return media.path
+}
+
 func NewImageMediaFile(path string, info os.FileInfo) ImageMediaFile {
 	return ImageMediaFile{path: path, fileInfo: info}
 }

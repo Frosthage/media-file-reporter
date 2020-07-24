@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strings"
 	"sync"
 )
@@ -82,6 +83,17 @@ func main() {
 		wg.Wait()
 		close(c)
 	}()
+
+
+	result := make([]formats.Media, 0)
+
+	for r := range c {
+		result = append(result, r.media)
+	}
+
+	sort.Slice(result, func(i ,j int) bool {
+		return strings.Compare(result[i].GetPath(), result[j].GetPath()) < 0
+	})
 
 	writer := csv.NewWriter(os.Stdout)
 	defer writer.Flush()

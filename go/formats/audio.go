@@ -41,6 +41,10 @@ func (media AudioMediaFile) GetRecord() (string, error) {
 	), nil
 }
 
+func (media AudioMediaFile) GetPath() string {
+	return media.path
+}
+
 func NewAudioMediaFile(path string, info os.FileInfo) AudioMediaFile {
 	return AudioMediaFile{path: path, fileInfo: info}
 }

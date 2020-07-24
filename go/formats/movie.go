@@ -42,6 +42,10 @@ func (media MovieMediaFile) GetRecord() (string, error) {
 	), nil
 }
 
+func (media MovieMediaFile) GetPath() string {
+	return media.path
+}
+
 func NewMovieMediaFile(path string, info os.FileInfo) MovieMediaFile {
 	return MovieMediaFile{path: path, fileInfo: info}
 }

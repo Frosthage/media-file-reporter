@@ -30,6 +30,10 @@ func (file NonMediaFile) GetRecord() (string, error) {
 	), nil
 }
 
+func (file NonMediaFile) GetPath() string {
+	return file.path
+}
+
 func NewNonMediaFile(path string, info os.FileInfo) NonMediaFile {
 	return NonMediaFile{path: path, fileInfo: info}
 }
