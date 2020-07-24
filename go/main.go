@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/csv"
 	"errors"
-	"fmt"
 	"frosthage.com/mp3-listaren/formats"
 	"os"
 	"path/filepath"
@@ -82,19 +81,37 @@ func main() {
 		close(c)
 	}()
 
-	writer := csv.NewWriter(os.Stdout)
+	file, err := os.Create("filer.txt")
+	if err != nil {
+		panic(err)
+	}
+
+	writer := csv.NewWriter(file)
 	defer writer.Flush()
 
 	for r := range c {
 		if r.err == nil {
-			r, _ := r.media.GetRecord()
-			writer.Write(strings.Split(r, "\t"))
+
+			if err != nil {
+				var v, ok = err.(formats.ErrorMediaFile)
+
+				var record, _ = v.GetRecord()
+
+				if ok {
+					writer.Write(strings.Split(record, "\t"))
+				} else {
+					println(err)
+				}
+			} else {
+				v, _ := r.media.GetRecord()
+				writer.Write(strings.Split(v, "\t"))
+			}
 		}
 	}
 }
 
-
-func main2() {
+/*
+func main() {
 
 	var files []formats.Media
 
@@ -149,3 +166,4 @@ func main2() {
 	}
 }
 
+*/
