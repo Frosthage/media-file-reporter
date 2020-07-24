@@ -61,7 +61,7 @@ func digester(done <-chan struct{}, paths <-chan string, c chan<- result) {
 	}
 }
 
-var root = "."
+var root = "D:\\movies"
 
 func main() {
 
@@ -133,7 +133,7 @@ func main2() {
 		fmt.Println(err)
 	}
 
-	file, err := os.Create("filer.txt")
+	file, err := os.Create("filer.csv")
 	if err != nil {
 		panic(err)
 	}
