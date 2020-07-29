@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -143,6 +144,26 @@ func TestCreateMedia_Mp4(t *testing.T) {
 	}
 }
 
+func TestCreateMedia_ErrorTest(t *testing.T) {
+
+	actual, err := getRecordAbsolutPath ("E:\\slask-4-realz\\DJI_0991.xmp")
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	expected := ".mp4\tsample\t../testdata/sample.mp4\t1570024\t30.526667s\t480\t270\t480x270\t---"
+
+	if actual != expected {
+		t.Errorf(
+			"\nExpected: '%v' \n"+
+				"Got:      '%v'", expected, actual)
+	}
+}
+
+
+
+
 func TestCreateMedia_Mpg(t *testing.T) {
 
 	actual, err := getRecord("sample.mpg")
@@ -194,6 +215,29 @@ func TestCreateMedia_Mp3(t *testing.T) {
 	}
 }
 
+
+func getRecordAbsolutPath(fileName string) (string, error) {
+
+	fileInfo, err := os.Stat(fileName)
+
+	if err != nil {
+		pwd, _ := os.Getwd()
+		fmt.Println(pwd)
+		return "", err
+	}
+
+	record, err := CreateMedia(fileName, fileInfo).GetRecord()
+
+	if err != nil {
+		return "", err
+	}
+
+	return strings.Join(record, "\t"), nil
+}
+
+
+
+
 func getRecord(fileName string) (string, error) {
 
 	filePath := filepath.Join("../testdata", fileName)
@@ -205,11 +249,11 @@ func getRecord(fileName string) (string, error) {
 		return "", err
 	}
 
-	actual, err := CreateMedia(filePath, fileInfo).GetRecord()
+	record, err := CreateMedia(filePath, fileInfo).GetRecord()
 
 	if err != nil {
 		return "", err
 	}
 
-	return actual, nil
+	return strings.Join(record, "\t"), nil
 }

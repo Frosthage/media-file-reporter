@@ -2,11 +2,10 @@ package formats
 
 import (
 	"context"
-	"fmt"
 	"gopkg.in/vansante/go-ffprobe.v2"
 	"log"
 	"os"
-	"path/filepath"
+	"strconv"
 	"time"
 )
 
@@ -15,7 +14,7 @@ type AudioMediaFile struct {
 	path     string
 }
 
-func (media AudioMediaFile) GetRecord() (string, error) {
+func (media AudioMediaFile) GetRecord() ([]string, error) {
 
 	ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelFn()
@@ -27,22 +26,27 @@ func (media AudioMediaFile) GetRecord() (string, error) {
 
 	duration := data.Format.Duration()
 
-	ext := filepath.Ext(media.path)
-	return fmt.Sprintf("%v\t%v\t%v\t%v\t%v\t%v\t%v\t%v\t%v",
-		ext,
-		media.fileInfo.Name()[0:len(media.fileInfo.Name())-len(ext)],
-		media.path,
-		media.fileInfo.Size(),
-		duration, // duration
-		"---",    // width
-		"---",    // height
-		"---",    // width * height
+	return []string{
+		getExt(media),
+		getNameWithoutExt(media),
+		getAbsoluteFolderPath(media),
+		strconv.Itoa(int(media.fileInfo.Size())),
+		GetDuration(duration), // duration
+		"---",                 // width
+		"---",                 // height
+		"---",                 // width * height
+		getCreationTime(media.fileInfo),
+		getLastWriteTime(media.fileInfo),
 		"---",
-	), nil
+	}, nil
 }
 
 func (media AudioMediaFile) GetPath() string {
 	return media.path
+}
+
+func (media AudioMediaFile) GetFileInfo() os.FileInfo {
+	return media.fileInfo
 }
 
 func NewAudioMediaFile(path string, info os.FileInfo) AudioMediaFile {

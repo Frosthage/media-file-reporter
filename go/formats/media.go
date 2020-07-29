@@ -11,9 +11,12 @@ import (
 )
 
 type Media interface {
-	GetRecord() (string, error)
+	GetRecord() ([]string, error)
 	GetPath() string
+	GetFileInfo() os.FileInfo
 }
+
+type MediaRecord []string
 
 func CreateMedia(filePath string, info os.FileInfo) Media {
 	switch ext := filepath.Ext(filePath); strings.ToLower(ext) {
@@ -33,10 +36,10 @@ func CreateMedia(filePath string, info os.FileInfo) Media {
 		fallthrough
 	case ".mpg":
 		fallthrough
-	case ".mp4":
-		fallthrough
 	case ".mkv":
 		return NewMovieMediaFile(filePath, info)
+	case ".mp4":
+		return NewMp4MediaFile(filePath, info)
 	case ".mp3":
 		return NewAudioMediaFile(filePath, info)
 

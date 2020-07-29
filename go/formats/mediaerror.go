@@ -1,9 +1,8 @@
 package formats
 
 import (
-	"fmt"
 	"os"
-	"path/filepath"
+	"strconv"
 )
 
 type ErrorMediaFile struct {
@@ -12,25 +11,35 @@ type ErrorMediaFile struct {
 	message  string
 }
 
-func (media ErrorMediaFile) GetRecord() (string, error) {
+func (media ErrorMediaFile) GetRecord() ([]string, error) {
 
-	ext := filepath.Ext(media.path)
-
-	return fmt.Sprintf("%v\t%v\t%v\t%v\t%v\t%v\t%v\t%v\t%v",
-		ext,
-		media.fileInfo.Name()[0:len(media.fileInfo.Name())-len(ext)],
-		media.path,
-		media.fileInfo.Size(),
+	return []string{
+		getExt(media),
+		getNameWithoutExt(media),
+		getAbsoluteFolderPath(media),
+		strconv.Itoa(int(media.fileInfo.Size())),
 		"---", // duration
 		"---", // width
 		"---", // height
 		"---", // width * height
+		getCreationTime(media.fileInfo),
+		getLastWriteTime(media.fileInfo),
 		media.message,
-	), nil
+	}, nil
 }
+
+
 
 func (media ErrorMediaFile) Error() string {
 	return media.message
+}
+
+func (media ErrorMediaFile) GetPath() string {
+	return media.path
+}
+
+func (media ErrorMediaFile) GetFileInfo() os.FileInfo {
+	return media.fileInfo
 }
 
 func NewErrorMediaFile(path string, info os.FileInfo, msg string) ErrorMediaFile {

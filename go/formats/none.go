@@ -1,9 +1,8 @@
 package formats
 
 import (
-	"fmt"
 	"os"
-	"path/filepath"
+	"strconv"
 )
 
 type NonMediaFile struct {
@@ -11,27 +10,32 @@ type NonMediaFile struct {
 	path     string
 }
 
-func (file NonMediaFile) GetRecord() (string, error) {
+func (media NonMediaFile) GetRecord() ([]string, error) {
 
-	ext := filepath.Ext(file.path)
+	media.fileInfo.Name()
 
-	file.fileInfo.Name()
-
-	return fmt.Sprintf("%v\t%v\t%v\t%v\t%v\t%v\t%v\t%v\t%v",
-		ext,
-		file.fileInfo.Name()[0:len(file.fileInfo.Name())-len(ext)],
-		file.path,
-		file.fileInfo.Size(),
+	return []string{
+		getExt(media),
+		getNameWithoutExt(media),
+		getAbsoluteFolderPath(media),
+		strconv.Itoa(int(media.fileInfo.Size())),
 		"---", // duration
 		"---", // width
 		"---", // height
 		"---", // width * height
+		getCreationTime(media.fileInfo),
+		getLastWriteTime(media.fileInfo),
 		"---",
-	), nil
+	}, nil
+
 }
 
-func (file NonMediaFile) GetPath() string {
-	return file.path
+func (media NonMediaFile) GetPath() string {
+	return media.path
+}
+
+func (media NonMediaFile) GetFileInfo() os.FileInfo {
+	return media.fileInfo
 }
 
 func NewNonMediaFile(path string, info os.FileInfo) NonMediaFile {

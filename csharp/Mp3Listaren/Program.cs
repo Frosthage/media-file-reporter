@@ -47,14 +47,6 @@ namespace Mp3Listaren
 
         static void Main()
         {
-            for (int i = 0; i < 10; ++i)
-            {
-                Console.WriteLine(i);
-            }
-            
-            throw new Exception("dfgvdfdfg");
-            
-            
             var fileInfos = Directory
                 .GetFiles(Environment.CurrentDirectory, "*", SearchOption.AllDirectories)
                 .Select(x => new FileInfo(x));

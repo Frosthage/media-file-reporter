@@ -21,8 +21,9 @@ func walkFiles(done <-chan struct{}, root string) (<-chan string, <-chan error) 
 		defer close(paths)
 		// No select needed for this send, since errc is buffered.
 		errc <- filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+
 			if err != nil {
-				return err
+				return nil
 			}
 			if !info.Mode().IsRegular() {
 				return nil
@@ -39,29 +40,31 @@ func walkFiles(done <-chan struct{}, root string) (<-chan string, <-chan error) 
 }
 
 type result struct {
-	media formats.Media
-	err   error
+	mediaRecord formats.MediaRecord
+	path        string
+	err         error
 }
 
 func digester(done <-chan struct{}, paths <-chan string, c chan<- result) {
 	for path := range paths {
 
 		fileInfo, err := os.Stat(path)
-		var media formats.Media
+		var record formats.MediaRecord
 
 		if err == nil {
-			media = formats.CreateMedia(path, fileInfo)
+			media := formats.CreateMedia(path, fileInfo)
+			record, err = media.GetRecord()
 		}
 
 		select {
-		case c <- result{media, err}:
+		case c <- result{record, path, err}:
 		case <-done:
 			return
 		}
 	}
 }
 
-var root = "D:\\movies"
+var root = "."
 
 func main() {
 
@@ -84,30 +87,43 @@ func main() {
 		close(c)
 	}()
 
-
-	result := make([]formats.Media, 0)
+	result := make([]result, 0)
 
 	for r := range c {
-		result = append(result, r.media)
+		result = append(result, r)
 	}
 
-	sort.Slice(result, func(i ,j int) bool {
-		return strings.Compare(result[i].GetPath(), result[j].GetPath()) < 0
+	sort.Slice(result, func(i, j int) bool {
+		return strings.Compare(result[i].path, result[j].path) < 0
 	})
 
-	writer := csv.NewWriter(os.Stdout)
+	file, err := os.Create("filer.csv")
+	if err != nil {
+		panic(err)
+	}
+	writer := csv.NewWriter(file)
+
+	defer file.Close()
 	defer writer.Flush()
 
-	for r := range c {
+	for _, r := range result {
+
 		if r.err == nil {
-			r, _ := r.media.GetRecord()
-			writer.Write(strings.Split(r, "\t"))
+			writer.Write(r.mediaRecord)
+		} else {
+			var v, ok = r.err.(formats.ErrorMediaFile)
+
+			if ok {
+				var record, _ = v.GetRecord()
+				writer.Write(record)
+			} else {
+				println(err)
+			}
 		}
 	}
 }
 
-
-func main2() {
+func main1() {
 
 	var files []formats.Media
 
@@ -129,6 +145,10 @@ func main2() {
 		return nil
 	})
 
+	sort.Slice(files, func(i, j int) bool {
+		return strings.Compare(files[i].GetPath(), files[j].GetPath()) < 0
+	})
+
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -139,6 +159,7 @@ func main2() {
 	}
 
 	writer := csv.NewWriter(file)
+	writer.Comma = '\t'
 
 	defer file.Close()
 	defer writer.Flush()
@@ -152,13 +173,13 @@ func main2() {
 			var record, _ = v.GetRecord()
 
 			if ok {
-				writer.Write(strings.Split(record, "\t"))
+				writer.Write(record)
+				continue
 			} else {
 				println(err)
 			}
 		}
 
-		writer.Write(strings.Split(record, "\t"))
+		writer.Write(record)
 	}
 }
-
