@@ -146,7 +146,7 @@ func TestCreateMedia_Mp4(t *testing.T) {
 
 func TestCreateMedia_ErrorTest(t *testing.T) {
 
-	actual, err := getRecordAbsolutPath ("E:\\slask-4-realz\\DJI_0991.xmp")
+	actual, err := getRecordAbsolutPath ("E:\\slask-4-realz\\2017-09-11-Frosthage-0236231.MP4")
 
 	if err != nil {
 		t.Error(err)

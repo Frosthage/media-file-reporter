@@ -39,7 +39,7 @@ func CreateMedia(filePath string, info os.FileInfo) Media {
 	case ".mkv":
 		return NewMovieMediaFile(filePath, info)
 	case ".mp4":
-		return NewMp4MediaFile(filePath, info)
+		return NewMovieMediaFile(filePath, info)
 	case ".mp3":
 		return NewAudioMediaFile(filePath, info)
 
