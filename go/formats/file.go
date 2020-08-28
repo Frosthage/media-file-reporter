@@ -29,7 +29,7 @@ func timeToString(t time.Time) string {
 		t.Hour(), t.Minute(), t.Second())
 }
 
-func getLastChangeTime(fileInfo os.FileInfo) string {
+func getLastUpdatedTime(fileInfo os.FileInfo) string {
 
 	timeSpec := times.Get(fileInfo)
 
@@ -37,7 +37,7 @@ func getLastChangeTime(fileInfo os.FileInfo) string {
 		return timeToString(timeSpec.ChangeTime())
 	}
 
-	return "N/A"
+	return timeToString(timeSpec.ModTime())
 }
 
 func getBirthTime(fileInfo os.FileInfo) string {

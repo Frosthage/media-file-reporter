@@ -26,7 +26,7 @@ func (media ImageMediaFile) GetRecord() ([]string, error) {
 			"---", // height
 			"---", // width * height
 			getBirthTime(media.fileInfo),
-			getLastChangeTime(media.fileInfo),
+			getLastUpdatedTime(media.fileInfo),
 			"Unable to open media",
 		}, err
 
@@ -44,7 +44,7 @@ func (media ImageMediaFile) GetRecord() ([]string, error) {
 			"---", // height
 			"---", // width * height
 			getBirthTime(media.fileInfo),
-			getLastChangeTime(media.fileInfo),
+			getLastUpdatedTime(media.fileInfo),
 			"Unable to decode image file",
 		}, err
 	}
@@ -59,7 +59,7 @@ func (media ImageMediaFile) GetRecord() ([]string, error) {
 		strconv.Itoa(image.Height),                      // height
 		fmt.Sprintf("%vx%v", image.Width, image.Height), // width * height
 		getBirthTime(media.fileInfo),
-		getLastChangeTime(media.fileInfo),
+		getLastUpdatedTime(media.fileInfo),
 		"---",
 	}, nil
 }

@@ -33,7 +33,7 @@ func (media Mp4MediaFile) GetRecord() ([]string, error) {
 		strconv.Itoa(height),                // height
 		fmt.Sprintf("%vx%v", width, height), // width * height
 		getBirthTime(media.fileInfo),
-		getLastChangeTime(media.fileInfo),
+		getLastUpdatedTime(media.fileInfo),
 		"---",
 	}, nil
 }

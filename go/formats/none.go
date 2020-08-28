@@ -24,7 +24,7 @@ func (media NonMediaFile) GetRecord() ([]string, error) {
 		"---", // height
 		"---", // width * height
 		getBirthTime(media.fileInfo),
-		getLastChangeTime(media.fileInfo),
+		getLastUpdatedTime(media.fileInfo),
 		"---",
 	}, nil
 

@@ -156,23 +156,6 @@ func TestCreateMedia_Mp4(t *testing.T) {
 	}
 }
 
-func TestCreateMedia_ErrorTest(t *testing.T) {
-
-	actual, err := getRecordAbsolutPath("E:\\slask-4-realz\\2017-09-11-Frosthage-0236231.MP4")
-
-	if err != nil {
-		t.Error(err)
-	}
-
-	expected := ".mp4\tsample\t../testdata/sample.mp4\t1570024\t30.526667s\t480\t270\t480x270\t---"
-
-	if actual != expected {
-		t.Errorf(
-			"\nExpected: '%v' \n"+
-				"Got:      '%v'", expected, actual)
-	}
-}
-
 func TestCreateMedia_Mpg(t *testing.T) {
 
 	actual, err := getRecord("sample.mpg")
