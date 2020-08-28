@@ -8,15 +8,27 @@ import (
 	"testing"
 )
 
+func testdataPath() string {
+	path, err := filepath.Abs("../testdata/")
+
+	if err != nil {
+		panic("Can't find test file")
+	}
+
+	return path
+}
+
 func TestCreateMedia_Jpg(t *testing.T) {
 
-	actual, err := getRecord("cat.jpg")
+	file := "cat.jpg"
+
+	actual, err := getRecord(file)
 
 	if err != nil {
 		t.Error(err)
 	}
 
-	expected := ".jpg\tcat\t../testdata/cat.jpg\t10820\t---\t474\t267\t474x267\t---"
+	expected := ".jpg\tcat\t" + testdataPath() + "\t10820\t---\t474\t267\t474x267\tN/A\t2020-08-02T19:48:07\t---"
 
 	if actual != expected {
 		t.Errorf(
@@ -33,7 +45,7 @@ func TestCreateMedia_Gif(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := ".gif\tcat\t../testdata/cat.gif\t770475\t---\t500\t311\t500x311\t---"
+	expected := ".gif\tcat\t" + testdataPath() + "\t770475\t---\t500\t311\t500x311\tN/A\t2020-08-02T19:48:07\t---"
 
 	if actual != expected {
 		t.Errorf(
@@ -50,7 +62,7 @@ func TestCreateMedia_Png(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := ".png\tcat\t../testdata/cat.png\t62873\t---\t235\t172\t235x172\t---"
+	expected := ".png\tcat\t" + testdataPath() + "\t62873\t---\t235\t172\t235x172\tN/A\t2020-08-02T19:48:07\t---"
 
 	if actual != expected {
 		t.Errorf(
@@ -67,7 +79,7 @@ func TestCreateMedia_Cr2(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := ".cr2\tsample1\t../testdata/sample1.cr2\t67127952\t---\t8688\t5792\t8688x5792\t---"
+	expected := ".cr2\tsample1\t" + testdataPath() + "\t67127952\t---\t8688\t5792\t8688x5792\tN/A\t2020-08-02T19:48:07\t---"
 
 	if actual != expected {
 		t.Errorf(
@@ -84,7 +96,7 @@ func TestCreateMedia_Dng(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := ".dng\tsample1\t../testdata/sample1.dng\t6372698\t---\t256\t171\t256x171\t---"
+	expected := ".dng\tsample1\t" + testdataPath() + "\t6372698\t---\t256\t171\t256x171\tN/A\t2020-08-02T19:48:07\t---"
 
 	if actual != expected {
 		t.Errorf(
@@ -101,7 +113,7 @@ func TestCreateMedia_Mov(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := ".mov\tsample\t../testdata/sample.mov\t709764\t30.571s\t480\t270\t480x270\t---"
+	expected := ".mov\tsample\t" + testdataPath() + "\t709764\t00:00:31\t480\t270\t480x270\tN/A\t2020-08-02T19:48:07\t---"
 
 	if actual != expected {
 		t.Errorf(
@@ -118,7 +130,7 @@ func TestCreateMedia_Avi(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := ".avi\tsample\t../testdata/sample.avi\t675840\t6.066667s\t256\t240\t256x240\t---"
+	expected := ".avi\tsample\t" + testdataPath() + "\t675840\t00:00:06\t256\t240\t256x240\tN/A\t2020-08-02T19:48:07\t---"
 
 	if actual != expected {
 		t.Errorf(
@@ -135,7 +147,7 @@ func TestCreateMedia_Mp4(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := ".mp4\tsample\t../testdata/sample.mp4\t1570024\t30.526667s\t480\t270\t480x270\t---"
+	expected := ".mp4\tsample\t" + testdataPath() + "\t1570024\t00:00:31\t480\t270\t480x270\tN/A\t2020-08-02T19:48:07\t---"
 
 	if actual != expected {
 		t.Errorf(
@@ -146,7 +158,7 @@ func TestCreateMedia_Mp4(t *testing.T) {
 
 func TestCreateMedia_ErrorTest(t *testing.T) {
 
-	actual, err := getRecordAbsolutPath ("E:\\slask-4-realz\\2017-09-11-Frosthage-0236231.MP4")
+	actual, err := getRecordAbsolutPath("E:\\slask-4-realz\\2017-09-11-Frosthage-0236231.MP4")
 
 	if err != nil {
 		t.Error(err)
@@ -161,9 +173,6 @@ func TestCreateMedia_ErrorTest(t *testing.T) {
 	}
 }
 
-
-
-
 func TestCreateMedia_Mpg(t *testing.T) {
 
 	actual, err := getRecord("sample.mpg")
@@ -172,7 +181,7 @@ func TestCreateMedia_Mpg(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := ".mpg\tsample\t../testdata/sample.mpg\t548754\t0s\t640\t360\t640x360\t---"
+	expected := ".mpg\tsample\t" + testdataPath() + "\t548754\t00:00:00\t640\t360\t640x360\tN/A\t2020-08-02T19:48:07\t---"
 
 	if actual != expected {
 		t.Errorf(
@@ -189,7 +198,7 @@ func TestCreateMedia_Mkv(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := ".mkv\tsample\t../testdata/sample.mkv\t573066\t13.346s\t640\t360\t640x360\t---"
+	expected := ".mkv\tsample\t" + testdataPath() + "\t573066\t00:00:13\t640\t360\t640x360\tN/A\t2020-08-02T19:48:07\t---"
 
 	if actual != expected {
 		t.Errorf(
@@ -206,7 +215,7 @@ func TestCreateMedia_Mp3(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := ".mp3\tsample\t../testdata/sample.mp3\t764176\t27.252s\t---\t---\t---\t---"
+	expected := ".mp3\tsample\t" + testdataPath() + "\t764176\t00:00:27\t---\t---\t---\tN/A\t2020-08-02T19:48:07\t---"
 
 	if actual != expected {
 		t.Errorf(
@@ -214,7 +223,6 @@ func TestCreateMedia_Mp3(t *testing.T) {
 				"Got:      '%v'", expected, actual)
 	}
 }
-
 
 func getRecordAbsolutPath(fileName string) (string, error) {
 
@@ -234,9 +242,6 @@ func getRecordAbsolutPath(fileName string) (string, error) {
 
 	return strings.Join(record, "\t"), nil
 }
-
-
-
 
 func getRecord(fileName string) (string, error) {
 

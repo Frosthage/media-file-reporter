@@ -20,5 +20,5 @@ func GetDuration(d time.Duration) string {
 
 	h := seconds / 3600
 
-	return fmt.Sprintf("%02d:%02d:%02d ", h, m, s)
+	return fmt.Sprintf("%02d:%02d:%02d", h, m, s)
 }

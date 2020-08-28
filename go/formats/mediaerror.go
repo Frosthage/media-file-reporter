@@ -22,13 +22,11 @@ func (media ErrorMediaFile) GetRecord() ([]string, error) {
 		"---", // width
 		"---", // height
 		"---", // width * height
-		getCreationTime(media.fileInfo),
-		getLastWriteTime(media.fileInfo),
+		getBirthTime(media.fileInfo),
+		getLastChangeTime(media.fileInfo),
 		media.message,
 	}, nil
 }
-
-
 
 func (media ErrorMediaFile) Error() string {
 	return media.message

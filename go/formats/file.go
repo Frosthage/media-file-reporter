@@ -2,9 +2,9 @@ package formats
 
 import (
 	"fmt"
+	"gopkg.in/djherbis/times.v1"
 	"os"
 	"path/filepath"
-	"syscall"
 	"time"
 )
 
@@ -22,32 +22,31 @@ func getAbsoluteFolderPath(media Media) string {
 	return filepath.Dir(abs)
 }
 
-func timeToString(fileTime syscall.Filetime) string {
-
-	t := time.Unix(0, fileTime.Nanoseconds())
+func timeToString(t time.Time) string {
 
 	return fmt.Sprintf("%d-%02d-%02dT%02d:%02d:%02d",
 		t.Year(), t.Month(), t.Day(),
 		t.Hour(), t.Minute(), t.Second())
 }
 
-func getLastWriteTime(fileInfo os.FileInfo) string {
-	if data, ok := fileInfo.Sys().(*syscall.Win32FileAttributeData); ok {
-		data.CreationTime.Nanoseconds()
+func getLastChangeTime(fileInfo os.FileInfo) string {
 
-		return timeToString(data.LastWriteTime)
+	timeSpec := times.Get(fileInfo)
+
+	if timeSpec.HasChangeTime() {
+		return timeToString(timeSpec.ChangeTime())
 	}
 
-	return "---"
+	return "N/A"
 }
 
-func getCreationTime(fileInfo os.FileInfo) string {
+func getBirthTime(fileInfo os.FileInfo) string {
 
-	if data, ok := fileInfo.Sys().(*syscall.Win32FileAttributeData); ok {
-		data.CreationTime.Nanoseconds()
+	timeSpec := times.Get(fileInfo)
 
-		return timeToString(data.CreationTime)
+	if timeSpec.HasBirthTime() {
+		return timeToString(timeSpec.BirthTime())
 	}
 
-	return "---"
+	return "N/A"
 }

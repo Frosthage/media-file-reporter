@@ -21,7 +21,7 @@ func (media Mp4MediaFile) GetRecord() ([]string, error) {
 
 	width, height := getResolution(file)
 
-	duration := time.Duration(file.Moov.Mvhd.Duration / file.Moov.Mvhd.Timescale) * time.Second
+	duration := time.Duration(file.Moov.Mvhd.Duration/file.Moov.Mvhd.Timescale) * time.Second
 
 	return []string{
 		getExt(media),
@@ -32,8 +32,8 @@ func (media Mp4MediaFile) GetRecord() ([]string, error) {
 		strconv.Itoa(width),                 // width
 		strconv.Itoa(height),                // height
 		fmt.Sprintf("%vx%v", width, height), // width * height
-		getCreationTime(media.fileInfo),
-		getLastWriteTime(media.fileInfo),
+		getBirthTime(media.fileInfo),
+		getLastChangeTime(media.fileInfo),
 		"---",
 	}, nil
 }
@@ -50,7 +50,6 @@ func getResolution(file *atom.File) (width int, height int) {
 
 	return width, height
 }
-
 
 func (media Mp4MediaFile) GetPath() string {
 	return media.path

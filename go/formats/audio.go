@@ -35,8 +35,8 @@ func (media AudioMediaFile) GetRecord() ([]string, error) {
 		"---",                 // width
 		"---",                 // height
 		"---",                 // width * height
-		getCreationTime(media.fileInfo),
-		getLastWriteTime(media.fileInfo),
+		getBirthTime(media.fileInfo),
+		getLastChangeTime(media.fileInfo),
 		"---",
 	}, nil
 }
