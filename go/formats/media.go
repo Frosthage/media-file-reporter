@@ -30,16 +30,16 @@ func CreateMedia(filePath string, info os.FileInfo) Media {
 		fallthrough
 	case ".cr2":
 		return NewImageMediaFile(filePath, info)
-	case ".mov":
-		fallthrough
 	case ".avi":
 		fallthrough
 	case ".mpg":
 		fallthrough
 	case ".mkv":
 		return NewMovieMediaFile(filePath, info)
+	case ".mov":
+		fallthrough
 	case ".mp4":
-		return NewMovieMediaFile(filePath, info)
+		return NewMp4MediaFile(filePath, info)
 	case ".mp3":
 		return NewAudioMediaFile(filePath, info)
 

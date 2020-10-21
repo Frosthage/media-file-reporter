@@ -113,7 +113,7 @@ func TestCreateMedia_Mov(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := ".mov\tsample\t" + testdataPath() + "\t709764\t00:00:31\t480\t270\t480x270\tN/A\t2020-08-02T19:48:07\t---"
+	expected := ".mov\tsample\t" + testdataPath() + "\t709764\t00:00:30\t480\t270\t480x270\tN/A\t2020-08-02T19:48:07\t---"
 
 	if actual != expected {
 		t.Errorf(
@@ -147,12 +147,34 @@ func TestCreateMedia_Mp4(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := ".mp4\tsample\t" + testdataPath() + "\t1570024\t00:00:31\t480\t270\t480x270\tN/A\t2020-08-02T19:48:07\t---"
+	expected := ".mp4\tsample\t" + testdataPath() + "\t1570024\t00:00:30\t480\t270\t480x270\tN/A\t2020-08-02T19:48:07\t---"
 
 	if actual != expected {
 		t.Errorf(
 			"\nExpected: '%v' \n"+
 				"Got:      '%v'", expected, actual)
+	}
+}
+
+func BenchmarkGetRecordForMp4WithMp4MediaFile(b *testing.B) {
+
+	filePath := filepath.Join("../testdata", "sample.mp4")
+	info, _ := os.Stat(filePath)
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		NewMp4MediaFile(filePath, info).GetRecord()
+	}
+}
+
+func BenchmarkGetRecordForMp4WithMovieMediaFile(b *testing.B) {
+
+	filePath := filepath.Join("../testdata", "sample.mp4")
+	info, _ := os.Stat(filePath)
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		NewMovieMediaFile(filePath, info).GetRecord()
 	}
 }
 

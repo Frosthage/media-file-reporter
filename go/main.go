@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"frosthage.com/mp3-listaren/formats"
+	"golang.org/x/text/encoding/charmap"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -101,7 +102,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	writer := csv.NewWriter(file)
+	writer := csv.NewWriter(charmap.Windows1251.NewEncoder().Writer(file))
 
 	defer file.Close()
 	defer writer.Flush()
