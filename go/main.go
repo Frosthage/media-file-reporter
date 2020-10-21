@@ -108,12 +108,12 @@ func main() {
 	defer writer.Flush()
 
 	for _, r := range result {
-
 		if r.err == nil {
-			writer.Write(r.mediaRecord)
+			 if err:=writer.Write(r.mediaRecord);err!=nil {
+				 println(err)
+			 }
 		} else {
 			var v, ok = r.err.(formats.ErrorMediaFile)
-
 			if ok {
 				var record, _ = v.GetRecord()
 				if err:= writer.Write(record);err != nil {
