@@ -229,6 +229,23 @@ func TestCreateMedia_Mp3(t *testing.T) {
 	}
 }
 
+func TestCreateNonMedia_Txt(t *testing.T) {
+	actual, err := getRecord("åäö.txt")
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	expected := ".txt\tåäö\t" + testdataPath() + "\t447\t---\t---\t---\t---\tN/A\t2020-10-21T20:43:57\t---"
+
+	if actual != expected {
+		t.Errorf(
+			"\nExpected: '%v' \n"+
+				"Got:      '%v'", expected, actual)
+	}
+}
+
+
 func getRecordAbsolutPath(fileName string) (string, error) {
 
 	fileInfo, err := os.Stat(fileName)

@@ -116,7 +116,9 @@ func main() {
 
 			if ok {
 				var record, _ = v.GetRecord()
-				writer.Write(record)
+				if err:= writer.Write(record);err != nil {
+					println(err)
+				}
 			} else {
 				println(err)
 			}
