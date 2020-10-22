@@ -15,6 +15,7 @@ type ImageMediaFile struct {
 func (media ImageMediaFile) GetRecord() ([]string, error) {
 
 	file, err := os.Open(media.path)
+	defer file.Close()
 	if err != nil {
 		return []string{
 			getExt(media),

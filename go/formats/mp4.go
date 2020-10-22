@@ -17,7 +17,7 @@ type Mp4MediaFile struct {
 func (media Mp4MediaFile) GetRecord() ([]string, error) {
 
 	file, _ := mp4.Open(media.path)
-	file.Close()
+	defer file.Close()
 
 	width, height := getResolution(file)
 
