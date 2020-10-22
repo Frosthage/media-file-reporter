@@ -102,7 +102,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	writer := csv.NewWriter(charmap.Windows1251.NewEncoder().Writer(file))
+	writer := csv.NewWriter(charmap.ISO8859_1.NewEncoder().Writer(file))
 
 	defer file.Close()
 	defer writer.Flush()
