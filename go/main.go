@@ -46,7 +46,10 @@ type result struct {
 	err         error
 }
 
+var currentFile = 0
+
 func digester(done <-chan struct{}, paths <-chan string, c chan<- result) {
+
 	for path := range paths {
 
 		fileInfo, err := os.Stat(path)
@@ -59,7 +62,8 @@ func digester(done <-chan struct{}, paths <-chan string, c chan<- result) {
 
 		select {
 		case c <- result{record, path, err}:
-			fmt.Println("apa")
+			currentFile++
+			fmt.Printf("\rFil %d", currentFile)
 		case <-done:
 			return
 		}
@@ -71,6 +75,7 @@ var root = "."
 func main() {
 
 	fmt.Println("Fillistaren har startat!")
+
 
 	done := make(<-chan struct{})
 	paths, _ := walkFiles(done, root)
