@@ -59,6 +59,7 @@ func digester(done <-chan struct{}, paths <-chan string, c chan<- result) {
 
 		select {
 		case c <- result{record, path, err}:
+			fmt.Println("apa")
 		case <-done:
 			return
 		}
@@ -69,6 +70,8 @@ var root = "."
 
 func main() {
 
+	fmt.Println("Fillistaren har startat!")
+
 	done := make(<-chan struct{})
 	paths, _ := walkFiles(done, root)
 
@@ -76,6 +79,9 @@ func main() {
 	c := make(chan result)
 	var wg sync.WaitGroup
 	numDigesters := runtime.NumCPU()
+
+	fmt.Printf("Behandlar %d filer samtidigt\n", numDigesters)
+
 	wg.Add(numDigesters)
 	for i := 0; i < numDigesters; i++ {
 		go func() {
