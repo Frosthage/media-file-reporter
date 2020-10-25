@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Serilog;
 using Serilog.Core;
 using File = TagLib.File;
@@ -23,7 +24,7 @@ namespace Mp3Listaren
         {
             SupportedVideo = new[]
                 {
-                    "mkv", "ogv", "avi", "wmv", "asf", "m4p", "m4v", "mpeg", "mpe", "mpv", "mpg", "m2v",
+                    "mkv", "ogv", "avi", "wmv", "asf", "m4p", "m4v", "mpeg", "mpe", "mpv", "mpg", "m2v","mp4"
                 }
                 .Distinct()
                 .ToDictionary(x => x);
@@ -58,10 +59,10 @@ namespace Mp3Listaren
 
             var outputPath = $@"{Directory.GetCurrentDirectory()}\filer.csv";
           
-            using StreamWriter streamWriter = new StreamWriter(outputPath);
+            using StreamWriter streamWriter = new StreamWriter(outputPath,false, Encoding.GetEncoding("ISO-8859-1"));
             for (var index = 0; index < fileInfos.Count; index++)
             {
-                Console.Write($"\rAnalyserar fil {index}/{fileInfosCount}");
+                Console.Write($"\rAnalyserar fil {index+1}/{fileInfosCount}");
                 
                 FileInfo fileInfo = fileInfos[index];
                 string extension = Path.GetExtension(fileInfo.FullName);
@@ -121,7 +122,7 @@ namespace Mp3Listaren
 
         private static FileType GetFileType(FileInfo fileInfo)
         {
-            var extension = fileInfo.Extension.TrimStart('.');
+            var extension = fileInfo.Extension.TrimStart('.').ToLower();
 
             if (SupportedAudio.ContainsKey(extension))
             {
