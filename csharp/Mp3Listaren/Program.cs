@@ -47,31 +47,37 @@ namespace Mp3Listaren
 
         static void Main()
         {
-            
+            Console.WriteLine("Analyserar filer!");
             
             var fileInfos = Directory
                 .GetFiles(Environment.CurrentDirectory, "*", SearchOption.AllDirectories)
-                .Select(x => new FileInfo(x));
+                .Select(x => new FileInfo(x))
+                .ToList();
 
-            var outputPath = $@"{Directory.GetCurrentDirectory()}\filer.txt";
+            var fileInfosCount = fileInfos.Count;
+
+            var outputPath = $@"{Directory.GetCurrentDirectory()}\filer.csv";
           
             using StreamWriter streamWriter = new StreamWriter(outputPath);
-            foreach (FileInfo fileInfo in fileInfos)
+            for (var index = 0; index < fileInfos.Count; index++)
             {
+                Console.Write($"\rAnalyserar fil {index}/{fileInfosCount}");
+                
+                FileInfo fileInfo = fileInfos[index];
                 string extension = Path.GetExtension(fileInfo.FullName);
                 var str = fileInfo.Name[..^extension.Length];
 
                 var (duration, width, height, resolution, imageDate) = GetData(fileInfo);
-                
+
                 streamWriter.WriteLine($"{extension}\t" +
                                        $"{str}\t" +
                                        $"{fileInfo.Directory.FullName}\t" +
                                        $"{fileInfo.Length}\t" +
-                                       $"{duration}\t", 
-                                       $"{width}\t", 
-                                       $"{height}\t", 
-                                       $"{resolution}\t", 
-                                       $"{imageDate}");
+                                       $"{duration}\t",
+                    $"{width}\t",
+                    $"{height}\t",
+                    $"{resolution}\t",
+                    $"{imageDate}");
             }
         }
 
