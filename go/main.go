@@ -12,6 +12,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"time"
 )
 
 func walkFiles(done <-chan struct{}, root string) (<-chan string, <-chan error) {
@@ -22,7 +23,6 @@ func walkFiles(done <-chan struct{}, root string) (<-chan string, <-chan error) 
 		defer close(paths)
 		// No select needed for this send, since errc is buffered.
 		errc <- filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-
 			if err != nil {
 				return nil
 			}
@@ -48,8 +48,7 @@ type result struct {
 
 var currentFile = 0
 
-func digester(done <-chan struct{}, paths <-chan string, c chan<- result) {
-
+func digester(done <-chan struct{}, paths <-chan string, c chan<- result, fileCount int) {
 	for path := range paths {
 
 		fileInfo, err := os.Stat(path)
@@ -59,23 +58,43 @@ func digester(done <-chan struct{}, paths <-chan string, c chan<- result) {
 			media := formats.CreateMedia(path, fileInfo)
 			record, err = media.GetRecord()
 		}
-
 		select {
 		case c <- result{record, path, err}:
 			currentFile++
-			fmt.Printf("\rFil %d", currentFile)
+			fmt.Printf("\rFil %d av %d", currentFile, fileCount)
 		case <-done:
 			return
 		}
 	}
 }
 
+func fileCount(path string) (int, error) {
+	i := 0
+	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+		if !info.IsDir() {
+			i++
+		}
+		return nil
+	})
+	if err != nil {
+		return 0, err
+	}
+	return i, nil
+}
+
 var root = "."
 
 func main() {
 
+	start := time.Now()
 	fmt.Println("Fillistaren har startat!")
 
+	fileCount, err := fileCount(root)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	done := make(<-chan struct{})
 	paths, _ := walkFiles(done, root)
@@ -90,7 +109,7 @@ func main() {
 	wg.Add(numDigesters)
 	for i := 0; i < numDigesters; i++ {
 		go func() {
-			digester(done, paths, c)
+			digester(done, paths, c, fileCount)
 			wg.Done()
 		}()
 	}
@@ -120,14 +139,14 @@ func main() {
 
 	for _, r := range result {
 		if r.err == nil {
-			 if err:=writer.Write(r.mediaRecord);err!=nil {
-				 println(err)
-			 }
+			if err := writer.Write(r.mediaRecord); err != nil {
+				println(err)
+			}
 		} else {
 			var v, ok = r.err.(formats.ErrorMediaFile)
 			if ok {
 				var record, _ = v.GetRecord()
-				if err:= writer.Write(record);err != nil {
+				if err := writer.Write(record); err != nil {
 					println(err)
 				}
 			} else {
@@ -135,65 +154,8 @@ func main() {
 			}
 		}
 	}
-}
 
-func main1() {
-
-	var files []formats.Media
-
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-
-		if err != nil {
-			fmt.Println(err)
-			return nil
-		}
-
-		if info.IsDir() {
-			return nil
-		}
-
-		media := formats.CreateMedia(path, info)
-
-		files = append(files, media)
-
-		return nil
-	})
-
-	sort.Slice(files, func(i, j int) bool {
-		return strings.Compare(files[i].GetPath(), files[j].GetPath()) < 0
-	})
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	file, err := os.Create("filer.csv")
-	if err != nil {
-		panic(err)
-	}
-
-	writer := csv.NewWriter(file)
-	writer.Comma = '\t'
-
-	defer file.Close()
-	defer writer.Flush()
-
-	for _, f := range files {
-		record, err := f.GetRecord()
-
-		if err != nil {
-			var v, ok = err.(formats.ErrorMediaFile)
-
-			var record, _ = v.GetRecord()
-
-			if ok {
-				writer.Write(record)
-				continue
-			} else {
-				println(err)
-			}
-		}
-
-		writer.Write(record)
-	}
+	since := time.Since(start)
+	fmt.Println()
+	fmt.Println(since)
 }
