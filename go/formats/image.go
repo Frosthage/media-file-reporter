@@ -17,6 +17,7 @@ func (media ImageMediaFile) GetRecord() ([]string, error) {
 	file, err := os.Open(media.path)
 	defer file.Close()
 	if err != nil {
+		fmt.Printf("\rKunde inte öppna bildfilen %v\n", media.path)
 		return []string{
 			getExt(media),
 			getNameWithoutExt(media),
@@ -29,12 +30,13 @@ func (media ImageMediaFile) GetRecord() ([]string, error) {
 			getBirthTime(media.fileInfo),
 			getLastUpdatedTime(media.fileInfo),
 			"Unable to open media",
-		}, err
+		}, NewErrorMediaFile(media.path, media.fileInfo, "Kunde inte öppna filen. Ett annat program kan ha låst filen.")
 
 	}
 
 	image, _, err := image.DecodeConfig(file)
 	if err != nil {
+		fmt.Printf("\rKunde inte läsa bildfilen %v\n", media.path)
 		return []string{
 			getExt(media),
 			getNameWithoutExt(media),
@@ -47,7 +49,7 @@ func (media ImageMediaFile) GetRecord() ([]string, error) {
 			getBirthTime(media.fileInfo),
 			getLastUpdatedTime(media.fileInfo),
 			"Unable to decode image file",
-		}, err
+		}, NewErrorMediaFile(media.path, media.fileInfo, "Bildfilen gick ej att läsa.")
 	}
 
 	return []string{

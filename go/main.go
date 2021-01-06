@@ -1,11 +1,12 @@
 package main
 
+import "C"
 import (
+	"bufio"
 	"encoding/csv"
 	"errors"
 	"fmt"
 	"frosthage.com/mp3-listaren/formats"
-	"golang.org/x/text/encoding/charmap"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -70,21 +71,40 @@ func digester(done <-chan struct{}, paths <-chan string, c chan<- result, fileCo
 
 func fileCount(path string) (int, error) {
 	i := 0
+
 	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
 			i++
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return 0, err
 	}
+
 	return i, nil
 }
 
 var root = "."
 
 func main() {
+
+	outputFilename := "filer.csv"
+	_, err := os.Stat(outputFilename)
+	reader := bufio.NewReader(os.Stdin)
+
+	if err == nil {
+		exists := true
+		for exists {
+			fmt.Println("Det finns redan en fil som heter filer.csv i mappen, döp om eller flytta den.")
+
+			reader.ReadRune()
+			_, err := os.Stat(outputFilename)
+			exists = !os.IsNotExist(err)
+		}
+	}
 
 	start := time.Now()
 	fmt.Println("Fillistaren har startat!")
@@ -132,7 +152,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	writer := csv.NewWriter(charmap.ISO8859_1.NewEncoder().Writer(file))
+	writer := csv.NewWriter(file)
 
 	defer file.Close()
 	defer writer.Flush()
@@ -155,7 +175,7 @@ func main() {
 		}
 	}
 
-	since := time.Since(start)
 	fmt.Println()
-	fmt.Println(since)
+	fmt.Printf("Körningen tog %v", time.Since(start))
+	reader.ReadRune()
 }

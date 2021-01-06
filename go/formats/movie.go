@@ -21,7 +21,8 @@ func (media MovieMediaFile) GetRecord() ([]string, error) {
 
 	data, err := ffprobe.ProbeURL(ctx, media.path)
 	if err != nil {
-		return []string{}, NewErrorMediaFile(media.path, media.fileInfo, "ffprobe is unable to read file")
+		fmt.Printf("\rffprobe kunde inte läsa %v\n", media.path)
+		return []string{}, NewErrorMediaFile(media.path, media.fileInfo, "ffprobe kunde inte läsa filen.")
 	}
 
 	height := data.FirstVideoStream().Height

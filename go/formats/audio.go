@@ -2,8 +2,8 @@ package formats
 
 import (
 	"context"
+	"fmt"
 	"gopkg.in/vansante/go-ffprobe.v2"
-	"log"
 	"os"
 	"strconv"
 	"time"
@@ -21,7 +21,8 @@ func (media AudioMediaFile) GetRecord() ([]string, error) {
 
 	data, err := ffprobe.ProbeURL(ctx, media.path)
 	if err != nil {
-		log.Panicf("Error getting data: %v", err)
+		fmt.Printf("\rffprobe kunde inte läsa %v\n", media.path)
+		return []string{}, NewErrorMediaFile(media.path, media.fileInfo, "ffprobe kunde inte läsa filen.")
 	}
 
 	duration := data.Format.Duration()
