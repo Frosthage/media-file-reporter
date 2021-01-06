@@ -47,8 +47,6 @@ namespace Mp3Listaren
 
         static void Main()
         {
-            
-            
             var fileInfos = Directory
                 .GetFiles(Environment.CurrentDirectory, "*", SearchOption.AllDirectories)
                 .Select(x => new FileInfo(x));
