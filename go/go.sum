@@ -2,9 +2,6 @@ github.com/alfg/mp4 v0.0.0-20200128044028-3ca65fbae6c4 h1:A0081cvI0G5EWFYnMSFo2T
 github.com/alfg/mp4 v0.0.0-20200128044028-3ca65fbae6c4/go.mod h1:RfuO8OqkqAcWXXkaS3MuymrBQJbKJWi04H/bs6vNvh0=
 github.com/mdouchement/dng v0.0.0-20170415183926-292bb2b0015a h1:6df3UGAQ08DXqDVgV5YhzP6igJ458b7znM0wfXDW1Fk=
 github.com/mdouchement/dng v0.0.0-20170415183926-292bb2b0015a/go.mod h1:9HzaDtkmVNHVqzkoow9lSuEzhN1OIxzDhJ6hZwmxblo=
-golang.org/x/text v0.3.3 h1:cokOdA+Jmi5PJGXLlLllQSgYigAEfHXJAERHVMaCc2k=
-golang.org/x/text v0.3.3/go.mod h1:5Zoc/QRtKVWzQhOtBMvqHzDpF6irO9z98xDceosuGiQ=
-golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
 gopkg.in/djherbis/times.v1 v1.2.0 h1:UCvDKl1L/fmBygl2Y7hubXCnY7t4Yj46ZrBFNUipFbM=
 gopkg.in/djherbis/times.v1 v1.2.0/go.mod h1:AQlg6unIsrsCEdQYhTzERy542dz6SFdQFZFv6mUY0P8=
 gopkg.in/vansante/go-ffprobe.v2 v2.0.2 h1:DdxSfFnlqeawPIVbIQEI6LR6OQHQNR7tNgWb2mWuC4w=
