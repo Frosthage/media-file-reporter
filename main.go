@@ -6,7 +6,6 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
-	"frosthage.com/mp3-listaren/formats"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -14,6 +13,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/Frosthage/media-file-reporter/formats"
 )
 
 func walkFiles(done <-chan struct{}, root string) (<-chan string, <-chan error) {
