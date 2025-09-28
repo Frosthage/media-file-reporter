@@ -1,6 +1,6 @@
-module frosthage.com/mp3-listaren
+module github.com/Frosthage/media-file-reporter
 
-go 1.23
+go 1.25
 
 require (
 	github.com/alfg/mp4 v0.0.0-20200128044028-3ca65fbae6c4
