@@ -3,10 +3,11 @@ package formats
 import (
 	"context"
 	"fmt"
-	"gopkg.in/vansante/go-ffprobe.v2"
 	"os"
 	"strconv"
 	"time"
+
+	"gopkg.in/vansante/go-ffprobe.v2"
 )
 
 type MovieMediaFile struct {
@@ -25,9 +26,16 @@ func (media MovieMediaFile) GetRecord() ([]string, error) {
 		return []string{}, NewErrorMediaFile(media.path, media.fileInfo, "ffprobe kunde inte läsa filen.")
 	}
 
-	height := data.FirstVideoStream().Height
-	width := data.FirstVideoStream().Width
-	duration := data.Format.Duration()
+	var height, width int
+	var duration time.Duration
+
+	if firstVideoStream := data.FirstVideoStream(); firstVideoStream != nil {
+		height = data.FirstVideoStream().Height
+		width = data.FirstVideoStream().Width
+		duration = data.Format.Duration()
+	} else {
+		fmt.Printf("%s saknade en video ström", media.path)
+	}
 
 	return []string{
 		getExt(media),
